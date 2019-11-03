@@ -126,7 +126,7 @@ class Party {
         partyTypeId: 286331153,
         key: 'k',
         appId: this.app.id,
-        buildId: String(this.app.config.netCL),
+        buildId: '1:1:',
         partyFlags: -2024557306,
         notAcceptingReason: 0,
         pc: this.members.length,

@@ -74,7 +74,7 @@ class Launcher extends Events {
       },
       build: '9.6.1-4858958+++Portal+Release-Live', // named "Build" in official launcher logs
       engineBuild: '4.21.0-6409401+++Portal+Release-Live', // named "Engine Build" in official launcher logs
-      netCL: 6409401, // named "Net CL" in official launcher logs
+      netCL: '', // named "Net CL" in official launcher logs
 
       http: {},
 

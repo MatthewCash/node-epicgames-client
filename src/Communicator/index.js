@@ -263,15 +263,6 @@ class Communicator extends EventEmitter {
               }
             }
 
-            if (
-              typeof invitation.meta !== 'object'
-              || typeof invitation.meta['urn:epic:cfg:build-id_s'] !== 'string'
-              || invitation.meta['urn:epic:cfg:build-id_s'] !== this.app.config.partyBuildId
-            ) {
-              this.launcher.debug.print('Fortnite: Cannot join into the party. Reason: Incompatible build id.');
-              break;
-            }
-
             const party = await this.app.Party.lookup(this.app, invitation.party_id);
             invitation = new this.app.PartyInvitation(party, invitation);
 
