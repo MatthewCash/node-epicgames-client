@@ -34,15 +34,23 @@ const launcher = new Launcher({
 ## Methods
 
 ### sendMessage(id, message)
-- **Arguments**
+- **Arguments:**
   - **id** - string, recipient's account id
   - **message** - string, your message
 
 ### updateStatus(status)
-- **Arguments**
+- **Arguments:**
   - **status** - optional, `string`, `object` or `null`.
 
+### waitForEvent(event, timeout)
+- **Arguments:**
+  - **event** - event name, e.g. `friend:status`.
+  - **status** - optional, timeout time in milliseconds.
+- **Returns:** data received in event
+
 ## Events
+
+You can listen events from specified party or friend by using `friend#ID:message`, `party#ID:updated`, e.g. `friend#9a1d43b1d826420e9fa393a79b74b2ff:message`
 
 ### raw:incoming
 ### raw:outgoing
@@ -66,7 +74,7 @@ Emitted while your friend send message to you.
 ### party:updated
 Emitted while leader change party state, it means change e.g. privacy, playlist.
 ```javascript
-app.on('party:member:joined', (party) => {
+app.on('party:updated', (party) => {
   console.log(`Party#${party.id} updated!`);
 });
 ```

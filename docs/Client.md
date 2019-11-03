@@ -250,6 +250,11 @@ Same as [getFriends](#getfriends), but returns only blocked friends.
   - **id** - string, account's id or name.
 - **Returns:** [Friend](./Friend.html) or `false` on failure
 
+### getFriendStatus(id)
+- **Arguments:**
+  - **id** - string, account's id or name.
+- **Returns:** [Status](./Status.html)
+
 ### acceptFriendRequest(id)
 Same as [inviteFriend(id)](#invitefriend-id).
 
@@ -276,8 +281,13 @@ Resends e-mail with verification link.
 Enables two factor authentication.
 - **Arguments**
   - **type** - string, `authenticator` or `email`
-  - **twoFactorCode** - string, `authenticator` or `email`
+  - **twoFactorCode** - string, number or function, see example below
 - **Returns:** `object` with `otpauth` and `secret`
+```javascript
+await launcher.enableTwoFactor('authenticator', (secret) => {
+  return require('authenticator').generateToken(secret); // https://www.npmjs.com/package/authenticator
+});
+```
 
 ### disableTwoFactor(type)
 Disables two factor authentication.

@@ -72,9 +72,11 @@ class Launcher extends Events {
         short: EPlatform.WIN,
         os: 'Windows/10.0.17134.1.768.64bit',
       },
+
       build: '9.6.1-4858958+++Portal+Release-Live', // named "Build" in official launcher logs
       engineBuild: '4.21.0-6409401+++Portal+Release-Live', // named "Engine Build" in official launcher logs
       netCL: '', // named "Net CL" in official launcher logs
+
 
       http: {},
 
@@ -107,7 +109,7 @@ class Launcher extends Events {
 
     this.account = null;
     this.communicator = null;
-    this.communicatorFriends = [];
+    // this.communicatorFriends = [];
 
     this.auth = null;
     this.entitlements = [];
@@ -254,27 +256,27 @@ class Launcher extends Events {
       if (this.config.useCommunicator) {
         this.communicator = new this.Communicator(this);
 
-        this.communicator.on('friends', (friends) => {
-          friends = friends.map(friend => new Friend(this, { 
-            ...friend,
-            status: 'ACCEPTED',
-          }));
-          this.communicatorFriends = friends;
-        });
+        // this.communicator.on('friends', (friends) => {
+        //   friends = friends.map(friend => new Friend(this, { 
+        //     ...friend,
+        //     status: 'ACCEPTED',
+        //   }));
+        //   this.communicatorFriends = friends;
+        // });
 
-        this.communicator.on('friend:added', (friend) => {
-          this.communicatorFriends.push(friend);
-        });
+        // this.communicator.on('friend:added', (friend) => {
+        //   this.communicatorFriends.push(friend);
+        // });
 
-        this.communicator.on('friend:removed', (removedFriend) => {
-          const friend = this.communicatorFriends.find(f => f.id === removedFriend.id);
-          if (friend) this.communicatorFriends.splice(this.communicatorFriends.indexOf(friend), 1);
-        });
+        // this.communicator.on('friend:removed', (removedFriend) => {
+        //   const friend = this.communicatorFriends.find(f => f.id === removedFriend.id);
+        //   if (friend) this.communicatorFriends.splice(this.communicatorFriends.indexOf(friend), 1);
+        // });
 
-        this.communicator.on('friend:status', (status) => {
-          const friend = this.communicatorFriends.find(f => f.id === status.sender.id);
-          if (friend) friend.status = status;
-        });
+        // this.communicator.on('friend:status', (status) => {
+        //   const friend = this.communicatorFriends.find(f => f.id === status.sender.id);
+        //   if (friend) friend.status = status;
+        // });
 
         await this.communicator.connect();
       }
@@ -636,11 +638,11 @@ class Launcher extends Events {
       let data = [];
 
       for (let i = 0; i < result.length; i += 1) {
-        data = [...result[i].data.map(account => new User(this, {
+        data = data.concat([...result[i].data.map(account => new User(this, {
           id: account.id,
           displayName: account.displayName,
           externalAuths: account.externalAuths,
-        }))];
+        }))]);
       }
 
       return data;
@@ -894,6 +896,17 @@ class Launcher extends Events {
     return this.removeFriend(id);
   }
 
+  async getFriendStatus(id) {
+    if (!this.communicator) throw new Error('Communicator support isn\'t enabled. To use this method, set `useCommunicator` on `true`.');
+    const user = await User.get(this, id);
+    await this.communicator.sendProbe(`${user.id}@${this.communicator.host}`);
+    try {
+      return await this.communicator.waitForEvent(`friend#${user.id}:status`, 5000, s => s.status);
+    } catch (err) {
+      throw new Error(`Could not retrieve status, error: ${err}`);
+    }
+  }
+
   /**
    * Returns launcher's status e.g. `DEPRECATED`.
    */
@@ -1044,7 +1057,15 @@ class Launcher extends Events {
         this.debug.print(`Game "${game.Name}" has been bought!`);
 
       }
+      
+      // const a = await this.checkVersionByAppName(game.Namespace, game.Name);
+      // console.dir(a);
+      
+      // options = {
 
+      //   ...options,
+      // };
+      
       const gameClient = new game.Client(this, options);
 
       if (!await gameClient.init()) { throw new Error(`Cannot initialize game ${game.Namespace}!`); }
@@ -1059,6 +1080,16 @@ class Launcher extends Events {
     }
 
     return false;
+  }
+
+  async checkAssetsVersions() {
+    const { data } = await this.http.sendGet(`${ENDPOINT.ASSETS_VERSIONS.replace('{{platform}}', 'Windows')}?label=Live`);
+    return data;
+  }
+
+  async checkVersionByAppName(namespace, appName) {
+    const assets = await this.checkAssetsVersions();
+    return assets.find(asset => asset.namespace === namespace && asset.appName === appName);
   }
 
   /**
@@ -1088,6 +1119,7 @@ class Launcher extends Events {
     const exchange = await this.account.auth.exchange();
 
     await this.http.sendGet(`https://accounts.epicgames.com/exchange?exchangeCode=${exchange.code}&redirectUrl=https%3A%2F%2Fepicgames.com%2Fsite%2Faccount`);
+    await this.http.sendGet('https://www.epicgames.com/account/password');
     
     let csrfToken = this.http.jar.getCookies('https://www.epicgames.com').find(cookie => cookie.key === 'csrfToken')
      || this.http.jar.getCookies('https://epicgames.com').find(cookie => cookie.key === 'csrfToken');
@@ -1191,6 +1223,7 @@ class Launcher extends Events {
     const exchange = await this.account.auth.exchange();
 
     await this.http.sendGet(`https://accounts.epicgames.com/exchange?exchangeCode=${exchange.code}&redirectUrl=https%3A%2F%2Fepicgames.com%2Fsite%2Faccount`);
+    await this.http.sendGet('https://www.epicgames.com/account/password');
     
     let csrfToken = this.http.jar.getCookies('https://www.epicgames.com').find(cookie => cookie.key === 'csrfToken')
      || this.http.jar.getCookies('https://epicgames.com').find(cookie => cookie.key === 'csrfToken');

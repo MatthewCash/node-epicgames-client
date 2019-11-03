@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.0.17
+- Improved [`Party`](/Party.html) and [`PartyMember`](/PartyMember.html) obejcts.
+
+## 2.0.16
+- Added filter argument for [`waitForEvent()`](/Communicator.html#waitforevent-event-timeout) method.
+- Improved [`getFriendStatus(id)`](/Client.html#getfriendstatus-id) method.
+
+## 2.0.15
+- Added temporary solution for problem with accepting invitations (in few cases). Thanks [Terbau](https://github.com/Terbau) for [PR](https://github.com/SzymonLisowiec/node-epicgames-client/pull/52).
+- Added [`waitForEvent()`](/Communicator.html#waitforevent-event-timeout) method to `Communicator`. Thanks [Terbau](https://github.com/Terbau) for [PR](https://github.com/SzymonLisowiec/node-epicgames-client/pull/52).
+- Added `getFriendStatus(id)` method for `Launcher` (`Client`). Thanks [Terbau](https://github.com/Terbau) for [PR](https://github.com/SzymonLisowiec/node-epicgames-client/pull/52).
+- Added Nintendo Switch to platform's enumerator (`EPlatform`).
+- Added communicator's events:
+  - `friend#ID:request`
+  - `friend#ID:added`
+  - `friend#ID:removed`
+  - `friend#ID:status`
+  - `friend#ID:message`
+- Updated launcher's `netCL`, `build` and `engineBuild`.
+
 ## 2.0.14
 - Updated `enableTwoFactor()` and `disableTwoFactor()` methods.
 
