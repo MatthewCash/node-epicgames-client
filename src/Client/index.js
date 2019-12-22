@@ -53,6 +53,8 @@ class Launcher extends Events {
    * @param {Object=} config.useWaitingRoom false to ignore waiting room (epicgames load balancer)
    * @param {Object=} config.language eg. `US`, `PL`
    * @param {Object=} config.http settings for lib https://github.com/request/request
+   * @param {Object=} config.defaultPartyConfig settings for lib https://github.com/request/requestautoPresenceUpdating
+   * @param {Object=} config.autoPresenceUpdating settings for lib https://github.com/request/requestautoPresenceUpdating
    */
   constructor(config) {
     super(config);
