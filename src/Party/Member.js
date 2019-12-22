@@ -57,7 +57,6 @@ class Member {
 
     this.isPatching = true;
     const revision = parseInt(this.revision, 10);
-    
     await this.app.http.send(
       'PATCH',
       `https://party-service-prod.ol.epicgames.com/party/api/v1/${this.app.id}/parties/${this.party.id}/members/${this.id}/meta`,
@@ -73,7 +72,7 @@ class Member {
     
     if (this.patchQueue.length > 0) {
       const args = this.patchQueue.shift();
-      this.patch(...args, true);
+      await this.patch(...args, true);
     } else {
       this.isPatching = false;
     }
