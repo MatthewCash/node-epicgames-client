@@ -6,10 +6,13 @@ class PartyInvitation {
 
     this.party = party;
     this.app = this.party.app;
-    
+
     this.meta = data.meta || [];
     this.time = data.time || data.sent_at;
 
+    this.sender = data.sent_by
+
+    // this.sender = party.invites[0].sent_by;
     /*
     TODO: add another params
     { party_id: '2d235a015c174366a6aa90330ec193c7',

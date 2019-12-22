@@ -60,7 +60,7 @@ class Party {
   async leave() {
     await this.app.http.send(
       'DELETE',
-      `https://party-service-prod.ol.epicgames.com/party/api/v1/${this.app.id}/parties/${this.id}/members/${this.app.launcher.account.id}`,
+      `https://party-service-prod.ol.epicgames.com/party/api/v1/Fortnite/parties/${this.id}/members/${this.app.launcher.account.id}`,
       `${this.app.auth.tokenType} ${this.app.auth.accessToken}`,
       {
         connection: {
@@ -93,7 +93,7 @@ class Party {
 
     this.isPatching = true;
     const revision = parseInt(this.revision, 10);
-    
+
     await this.app.http.send(
       'PATCH',
       `https://party-service-prod.ol.epicgames.com/party/api/v1/${this.app.id}/parties/${this.id}`,
@@ -130,54 +130,54 @@ class Party {
   }
 
   updatePresence() {
-    let partyJoinInfoData;
-    
-    if (
-      this.config.privacy.presencePermission === 'None'
-      || (this.config.privacy.presencePermission === 'Leader' && this.leader.id !== this.me.id)
-    ) {
-      partyJoinInfoData = {
-        bInPrivate: true,
-      };
-    } else {
-      partyJoinInfoData = {
-        sourceId: this.app.launcher.account.id,
-        sourceDisplayName: this.app.launcher.account.name,
-        sourcePlatform: this.app.config.platform.short,
-        partyId: this.id,
-        partyTypeId: 286331153,
-        key: 'k',
-        appId: this.app.id,
-        buildId: '1:1:',
-        partyFlags: -2024557306,
-        notAcceptingReason: 0,
-        pc: this.members.length,
-      };
-    }
+    // let partyJoinInfoData;
 
-    this.app.communicator.updateStatus({
-      Status: `Lobby Battle Royale - ${this.members.length} / ${this.config.maxSize}`,
-      bIsPlaying: true,
-      bIsJoinable: false,
-      bHasVoiceSupport: false,
-      SessionId: '',
-      Properties: {
-        'party.joininfodata.286331153_j': partyJoinInfoData,
-        FortBasicInfo_j: {
-          homeBaseRating: 1,
-        },
-        FortLFG_I: '0',
-        FortPartySize_i: 1,
-        FortSubGame_i: 1,
-        InUnjoinableMatch_b: false,
-        FortGameplayStats_j: {
-          state: '',
-          playlist: 'None',
-          numKills: 0,
-          bFellToDeath: false,
-        },
-      },
-    });
+    // if (
+    //   this.config.privacy.presencePermission === 'None'
+    //   || (this.config.privacy.presencePermission === 'Leader' && this.leader.id !== this.me.id)
+    // ) {
+    //   partyJoinInfoData = {
+    //     bInPrivate: true,
+    //   };
+    // } else {
+    //   partyJoinInfoData = {
+    //     sourceId: this.app.launcher.account.id,
+    //     sourceDisplayName: this.app.launcher.account.name,
+    //     sourcePlatform: this.app.config.platform.short,
+    //     partyId: this.id,
+    //     partyTypeId: 286331153,
+    //     key: 'k',
+    //     appId: this.app.id,
+    //     buildId: '1:1:',
+    //     partyFlags: -2024557306,
+    //     notAcceptingReason: 0,
+    //     pc: this.members.length,
+    //   };
+    // }
+
+    // this.app.communicator.updateStatus({
+    //   Status: `Lobby Battle Royale - ${this.members.length} / ${this.config.maxSize}`,
+    //   bIsPlaying: true,
+    //   bIsJoinable: false,
+    //   bHasVoiceSupport: false,
+    //   SessionId: '',
+    //   Properties: {
+    //     'party.joininfodata.286331153_j': partyJoinInfoData,
+    //     FortBasicInfo_j: {
+    //       homeBaseRating: 1,
+    //     },
+    //     FortLFG_I: '0',
+    //     FortPartySize_i: 1,
+    //     FortSubGame_i: 1,
+    //     InUnjoinableMatch_b: false,
+    //     FortGameplayStats_j: {
+    //       state: '',
+    //       playlist: 'None',
+    //       numKills: 0,
+    //       bFellToDeath: false,
+    //     },
+    //   },
+    // });
 
   }
 
@@ -195,11 +195,11 @@ class Party {
     let privacy = this.meta.get('PrivacySettings_j');
     privacy = Object.values(EPartyPrivacy).find((p) => {
       return p.partyType === privacy.PrivacySettings.partyType
-      && p.inviteRestriction === privacy.PrivacySettings.partyInviteRestriction
-      && p.onlyLeaderFriendsCanJoin === privacy.PrivacySettings.bOnlyLeaderFriendsCanJoin;
+        && p.inviteRestriction === privacy.PrivacySettings.partyInviteRestriction
+        && p.onlyLeaderFriendsCanJoin === privacy.PrivacySettings.bOnlyLeaderFriendsCanJoin;
     });
     if (privacy) this.config.privacy = privacy;
-    
+
   }
 
   parseConfiguration(config) {
@@ -246,7 +246,7 @@ class Party {
     return data;
   }
 
-  static async create(app, config) { 
+  static async create(app, config) {
     if (!app.communicator) return null;
     config = {
       ...app.config.defaultPartyConfig,
